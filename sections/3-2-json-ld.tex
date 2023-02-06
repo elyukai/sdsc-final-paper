@@ -1,0 +1,41 @@
+\subsection{\glsentrytext{jsonld}}\label{sec:jsonldinfo}
+
+\gls{jsonld} is the format used throughout the \gls{wot}, with its main use being \glspl{td}. It adds a semantic layer to a \gls{json} structure to let every property be a globally unique identifier -- a \gls{uri} -- based on ontologies. \gls{jsonld} provides different ways how to represent data. The most common way is to provide a so-called \enquote*{context}, so you can use more readable property names for the actual data. The context is a nested \gls{json} structure that maps the property names to the actual identifiers. \autoref{lst:example-td} shows an exemplary \gls{td} document, where the \gls{wot} ontology \cite{w3c.wot.tdo.20230111} and other secondary ontologies are referenced in its context. Some \glspl{uri} have been abbreviated for formatting reasons.
+
+Property names use terms from a referenced context document, which provides a description and \gls{uri} for the property. Auxiliary ontologies may be referred to using a prefix. The process of getting the actual structure and identifiers is called \enquote{expansion}. Its result is a \gls{json} document where each property is a \gls{uri}. Due to the flexible nature of how to reference ontologies, two documents with the exact same semantic meaning may not have equal \gls{jsonld} representations, i.e. they're not structurally equal. Only if documents are fully expanded, they are structurally comparable (excluding arrays where the order does not matter). \autoref{lst:example-jsonld-document-expanded} shows an excerpt of the expanded example \gls{td} document from \autoref{lst:example-td}, which is -- at least seemingly -- larger, due to the \gls{uri} expansion, and deeper nested.
+
+\begin{lstlisting}[language=json,caption={Example \gls{jsonld} document expanded},label={lst:example-jsonld-document-expanded}]
+[
+  {
+    "@type": [
+      "https://...fly.dev/ontology#TemperatureSensor"
+    ],
+    "@id": "https://example.com/temperature/1",
+    "https://www.w3.org/2019/wot/td#title": [
+      {
+        "@value": "Nowhere Temperature Sensor"
+      }
+    ],
+    ...
+    "https://.../td#hasPropertyAffordance": [
+      {
+        "@type": [
+          "https://...ntology#TemperatureAffordance",
+          "https://.../wot/json-schema#NumberSchema"
+        ],
+        "https://.../wot/td#hasForm": [
+          {
+            "https://.../wot/hypermedia#hasTarget": [
+              {
+                "@value": "https://.../temperature"
+              }
+            ],
+            ...
+          }
+        ],
+        ...
+      }
+    ]
+  }
+]
+\end{lstlisting}

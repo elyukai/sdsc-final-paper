@@ -1,0 +1,179 @@
+\subsection{Ontology}\label{sec:ontology}
+
+To overcome this problem, we propose a new ontology that is based on already established ontologies and aligns with the \citetitle{w3c.wot.tdo.20230111} for specific use in \glspl{td} and, at the same time, an easy way to extend the ontology if new application areas are needed.
+
+The core element of the ontology is the \lstinline|Sensor| class, which is built on top of the \lstinline|Sensor| class from \citetitle{etsi.saref.core} and its extensions from the \citetitle{etsi.saref.envi}. Also inheriting properties from the \citetitle{w3c.geo}, the \lstinline|Sensor| class provides important \gls{qos} features such as the location, measurement frequency and data transmission period. The class is intended to be sub-classed for each sensor type to have a common set of important values available to retrieve independent of the sensor type.
+
+Each sensor type consists of a set of different classes and named individuals, as seen in \autoref{fig:ontology-parts-per-sensor-type}. This includes the parts which are the same across all sensor types, which makes it easy to extend the ontology with new sensor types.
+
+\begin{figure}[H]
+  \begin{tikzpicture}[
+    node distance=30mm and 15mm,
+    on grid,
+    text height=1.5ex, % size including ascenders
+    text depth=.1ex,   % descenders size
+    class/.style={
+      draw=ACMPurple,
+      inner xsep=6pt,
+      inner ysep=6pt,
+      rectangle,
+      draw,
+      line width=1pt,
+    },
+    namedindividual/.style={
+      draw=ACMOrange,
+      inner xsep=6pt,
+      inner ysep=6pt,
+      rounded rectangle,
+      draw,
+      line width=1pt,
+    },
+    edgedesc/.style={
+      font=\ttfamily\scriptsize,
+    },
+  ]
+    \node (s) [class] {Sensor};
+    \node (pa) [class,below right=of s,xshift=10mm] {Property Affordance}
+      edge [<-] node [edgedesc,above,sloped,xshift=1mm] {td:hasPropertyAffordance} (s);
+    \node (p) [class,below left=of pa] {Property}
+      edge [<-] node [edgedesc,below,sloped,yshift=2pt] {saref:measuresProperty} (s)
+      edge [<-] node [edgedesc,above,sloped]            {ssn:forProperty}        (pa);
+    \node (pu) [class,below=of p,xshift=-5mm,yshift=10mm] {Property Unit}
+      edge [<-] node [edgedesc,right] {om:commonlyHasUnit} (p);
+    \node (u1) [namedindividual,below left=of pu,yshift=10mm] {Unit 1}
+      edge [->] node [edgedesc,above,sloped,xshift=-1mm] {rdf:type} (pu);
+    \node (u2) [namedindividual,below=of pu,yshift=10mm] {Unit 2}
+      edge [->] node [edgedesc,above,sloped] {rdf:type} (pu);
+    \node (u2) [namedindividual,below right=of pu,yshift=10mm] {…}
+      edge [->] node [edgedesc,above,sloped,xshift=1mm] {rdf:type} (pu);
+    \node (m) [class,below left=of s,xshift=-10mm] {Measurement}
+      edge [->] node [edgedesc,above,sloped,xshift=-1mm]  {saref:measurementMadeBy} (s)
+      edge [->] node [edgedesc,above,sloped,xshift=1.5mm] {saref:relatesToProperty} (p)
+      edge [->] node [edgedesc,below,sloped,yshift=1pt]   {saref:isMeasuredIn}      (pu);
+  \end{tikzpicture}
+  \caption{Ontology parts for each sensor type}\label{fig:ontology-parts-per-sensor-type}
+\end{figure}
+
+The class that subclasses \lstinline|Sensor| represents the root of the \gls{td}. The \lstinline|Measurement| is not a direct part of the \gls{td}, which is defined by the other parts mentioned in \autoref{fig:ontology-parts-per-sensor-type}, but serves as the definition of the format used to serve the data of a single measurement. This ensures a unified data format for all sensors of a type. The \lstinline|Property| mainly serves as a description of the actual property to measure and to bind the property's unit classes. The \lstinline|Property Unit| is only used to provide a common type for all named individuals that represent each possible unit of the property.
+
+We applied this principle to multiple measurable values to verify it works for different use cases. Hereafter, we will discuss one of those examples in detail.
+
+Our ontology is defined using Turtle syntax \autocite{w3c.turtle}, since most of the existing ontologies are also defined using this syntax. To fully understand our ontology, we first introduce the used prefixes and their expanded \gls{uri} forms in \autoref{lst:ontology-prefixes}.
+
+\begin{lstlisting}[language=turtle,caption={Ontology prefixes},label={lst:ontology-prefixes}]
+@prefix : <https://sdsc.fly.dev/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix saref: <https://saref.etsi.org/core/> .
+@prefix s4envi: <https://saref.etsi.org/saref4envi/> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix td: <https://www.w3.org/2019/wot/td#> .
+@prefix om: <http://www.ontology-of-units-of-measure.org/resource/om-2/> .
+@base <https://sdsc.fly.dev/ontology> .
+\end{lstlisting}
+
+The \lstinline|Sensor| class is the core class (\autoref{lst:sensor-class}). It is only defined once and is sub-classed by \lstinline|TemperatureSensor|, which is our example sensor type and on which its measured property and the temperature affordance for the \gls{td} are defined (\autoref{lst:temperaturesensor-class}). The \lstinline|Sensor| class also makes it possible to include \gls{qos} aspects like location, the frequency of measurements and the transmission period.
+
+\begin{lstlisting}[language=turtle,caption={{\ttfamily{}Sensor} class},label={lst:sensor-class}]
+###  https://sdsc.fly.dev/ontology#Sensor
+:Sensor
+  rdf:type owl:Class ;
+  rdfs:subClassOf
+    geo:SpatialThing ,
+    saref:Sensor ,
+    [ rdf:type owl:Restriction ;
+      owl:onProperty s4envi:hasFrequencyMeasurement ;
+      owl:allValuesFrom s4envi:FrequencyMeasurement
+    ] ,
+    [ rdf:type owl:Restriction ;
+      owl:onProperty s4envi:hasTransmissionPeriod ;
+      owl:allValuesFrom s4envi:PeriodMeasurement
+    ] .
+\end{lstlisting}
+
+\begin{lstlisting}[language=turtle,caption={{\ttfamily{}TemperatureSensor} class},label={lst:temperaturesensor-class}]
+###  https://sdsc.fly.dev/ontology#TemperatureSensor
+:TemperatureSensor
+  rdf:type owl:Class ;
+  rdfs:subClassOf
+    :Sensor ,
+    [ rdf:type owl:Restriction ;
+      owl:onProperty saref:measuresProperty ;
+      owl:someValuesFrom :Temperature
+    ] ,
+    [ rdf:type owl:Restriction ;
+      owl:onProperty td:hasPropertyAffordance ;
+      owl:someValuesFrom :TemperatureAffordance
+    ] .
+\end{lstlisting}
+
+The \lstinline|TemperatureAffordance| class then restricts the permitted values for its property affordance to \lstinline|Temperature| values (\autoref{lst:temperatureaffordance-class}).
+
+\begin{lstlisting}[language=turtle,caption={{\ttfamily{}TemperatureAffordance} class},label={lst:temperatureaffordance-class}]
+###  https://sdsc.fly.dev/ontology#TemperatureAffordance
+:TemperatureAffordance
+  rdf:type owl:Class ;
+  rdfs:subClassOf
+    [ rdf:type owl:Restriction ;
+      owl:onProperty ssn:forProperty ;
+      owl:someValuesFrom :Temperature
+    ] .
+\end{lstlisting}
+
+A \lstinline|Temperature| is defined by a common unit and can be labelled and described (\autoref{lst:temperature-class}). The associated \lstinline|TemperatureUnit| is defined as a class, which each of its actual units as named individuals (\autoref{lst:temperatureunit-class}). Those individuals are imported from another ontology and mapped onto the \lstinline|TemperatureUnit| class.
+
+\begin{lstlisting}[language=turtle,caption={{\ttfamily{}Temperature} class},label={lst:temperature-class}]
+###  https://sdsc.fly.dev/ontology#Temperature
+:Temperature
+  rdf:type owl:Class ;
+  rdfs:subClassOf saref:Property ;
+  om:commonlyHasUnit :TemperatureUnit ;
+  rdfs:comment "Temperature is the extent to which an object is hot."@en ;
+  rdfs:label "Temperature"@en .
+\end{lstlisting}
+
+\begin{lstlisting}[language=turtle,caption={{\ttfamily{}TemperatureUnit} class and its named individual(s)},label={lst:temperatureunit-class}]
+###  https://sdsc.fly.dev/ontology#TemperatureUnit
+:TemperatureUnit rdf:type owl:Class ;
+  rdfs:subClassOf
+    om:Unit ,
+    saref:UnitOfMeasure ;
+  rdfs:comment "The unit of measure for temperature"@en ;
+  rdfs:label "Temperature unit"@en .
+
+###  http://www.ontology-of-units-of-measure.org/resource/om-2/degreeCelsius
+om:degreeCelsius
+  rdf:type
+    owl:NamedIndividual ,
+    :TemperatureUnit .
+\end{lstlisting}
+
+The \lstinline|TemperatureMeasurement| class connects the different parts by referencing the sensor class, the property, its unit and the format, in which the measurement is made (\autoref{lst:temperaturemeasurement-class}).
+
+\begin{lstlisting}[language=turtle,caption={{\ttfamily{}TemperatureMeasurement} class},label={lst:temperaturemeasurement-class}]
+###  https://sdsc.fly.dev/ontology#TemperatureMeasurement
+:TemperatureMeasurement
+  rdf:type owl:Class ;
+  rdfs:subClassOf
+    saref:Measurement ,
+    [ rdf:type owl:Restriction ;
+      owl:onProperty saref:measurementMadeBy ;
+      owl:someValuesFrom :TemperatureSensor
+    ] ,
+    [ rdf:type owl:Restriction ;
+      owl:onProperty saref:relatesToProperty ;
+      owl:someValuesFrom :Temperature
+    ] ,
+    [ rdf:type owl:Restriction ;
+      owl:onProperty saref:isMeasuredIn ;
+      owl:someValuesFrom :TemperatureUnit
+    ] ,
+    [ rdf:type owl:Restriction ;
+      owl:onProperty saref:hasValue ;
+      owl:allValuesFrom xsd:float
+    ] .
+\end{lstlisting}

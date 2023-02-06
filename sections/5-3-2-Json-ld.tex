@@ -1,0 +1,3 @@
+\subsubsection{JSON-LD}\label{sec:jsonld}
+
+Since the server may hold heterogeneous data from different providers, the structure of \gls{jsonld} documents may vary, which prevents direct decoding. It first has to be normalized by expanding the data. Normalization with a different method, which could result in simpler data structures, may not work, because it could result in heterogeneous data. For example, multiple values for the same property would be encoded as an array, while a single value would be encoded as-is. Expansion would always result in an array of values, even if only a single value is present.

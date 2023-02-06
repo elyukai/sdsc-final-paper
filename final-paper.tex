@@ -1,0 +1,208 @@
+\documentclass[sigconf,nonacm,natbib=false]{acmart}
+
+\usepackage[T1]{fontenc}
+
+\usepackage[english]{babel}
+
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+
+\usepackage{soul}
+\sethlcolor{ACMYellow}
+
+\usepackage{tikz}
+\usetikzlibrary{backgrounds,calc,fit,positioning,shapes}
+
+\usepackage{float}
+
+\usepackage[all]{nowidow}
+
+\usepackage[backend=biber,style=ACM-Reference-Format,sorting=none]{biblatex}
+\addbibresource{final-paper.bib}
+
+\usepackage{csquotes}
+\SetCiteCommand{\autocite}
+
+\usepackage{listings}
+\lstdefinelanguage{json}{
+  basicstyle=\small\ttfamily,
+  breakindent=4.8ex,
+  basewidth=0.55em,
+  showstringspaces=false,
+  morestring=[b]",
+  stringstyle=\color{ACMRed},
+  keywords=[0]{true,false},
+  keywordstyle=[0]\color{ACMPurple},
+  literate=
+    *
+    {0}{{{\color{ACMBlue}0}}}{1}
+    {1}{{{\color{ACMBlue}1}}}{1}
+    {2}{{{\color{ACMBlue}2}}}{1}
+    {3}{{{\color{ACMBlue}3}}}{1}
+    {4}{{{\color{ACMBlue}4}}}{1}
+    {5}{{{\color{ACMBlue}5}}}{1}
+    {6}{{{\color{ACMBlue}6}}}{1}
+    {7}{{{\color{ACMBlue}7}}}{1}
+    {8}{{{\color{ACMBlue}8}}}{1}
+    {9}{{{\color{ACMBlue}9}}}{1}
+    {:}{{{\color{ACMDarkBlue}{:}}}}{1}
+    {,}{{{\color{ACMDarkBlue}{,}}}}{1}
+    {\{}{{{\color{ACMDarkBlue}{\{}}}}{1}
+    {\}}{{{\color{ACMDarkBlue}{\}}}}}{1}
+    {[}{{{\color{ACMDarkBlue}{[}}}}{1}
+    {]}{{{\color{ACMDarkBlue}{]}}}}{1},
+}
+\lstdefinelanguage{turtle}{
+  basicstyle=\small\ttfamily,
+  breakindent=4.8ex,
+  basewidth=0.55em,
+  showstringspaces=false,
+  morecomment=[l]{\#},
+  commentstyle=\color{gray},
+  morestring=[b]",
+  morestring=[s]{<}{>},
+  stringstyle=\color{ACMRed},
+  classoffset=0,
+  morekeywords={owl,rdf,xml,xsd,rdfs,saref,s4envi,ssn,geo,td,om},
+  keywordstyle=\color{ACMBlue},
+  classoffset=1,
+  morekeywords={@prefix,@base,@en},
+  keywordstyle=\color{ACMOrange},
+  classoffset=0,
+  literate=
+    *
+    {:}{{{\color{ACMBlue}{:}}}}{1}
+    {;}{{{\color{ACMDarkBlue}{;}}}}{1}
+    {,}{{{\color{ACMDarkBlue}{,}}}}{1}
+    {.}{{{\color{ACMDarkBlue}{.}}}}{1}
+    {[}{{{\color{ACMDarkBlue}{[}}}}{1}
+    {]}{{{\color{ACMDarkBlue}{]}}}}{1},
+}
+\lstdefinelanguage{jsonpath}{
+  basicstyle=\small\ttfamily,
+  breakindent=4.8ex,
+  basewidth=0.55em,
+}
+
+\lstset{
+  basicstyle=\ttfamily,
+  frame=lines,
+  breaklines=true,
+}
+
+\usepackage{bookmark}
+\bookmarksetup{numbered,open}
+
+\usepackage[nonumberlist,automake]{glossaries-extra}
+\makeglossaries{}
+\setabbreviationstyle{short-nolong}
+\setabbreviationstyle[acronym]{long-short}
+\setglossarystyle{list}
+\loadglsentries{glossary}
+
+\begin{document}
+
+\title{Extending the Web of Things to standardize Service Discovery in Smart Cities}
+
+\author{Tristan Damm}
+\affiliation{%
+  \institution{Hochschule Flensburg}
+  \streetaddress{Kanzleistraße 91--93}
+  \city{Flensburg}
+  \country{Germany}
+  \postcode{24943}
+}
+\email{tristan.damm@stud.hs-flensburg.de}
+
+\author{Ellen Landschoof}
+\affiliation{%
+  \institution{Hochschule Flensburg}
+  \streetaddress{Kanzleistraße 91--93}
+  \city{Flensburg}
+  \country{Germany}
+  \postcode{24943}
+}
+\email{ellen.landschoof@stud.hs-flensburg.de}
+
+\author{Lukas Obermann}
+\affiliation{%
+  \institution{Hochschule Flensburg}
+  \streetaddress{Kanzleistraße 91--93}
+  \city{Flensburg}
+  \country{Germany}
+  \postcode{24943}
+}
+\email{lukas.obermann@stud.hs-flensburg.de}
+
+\author{Louis Richter}
+\affiliation{%
+  \institution{Hochschule Flensburg}
+  \streetaddress{Kanzleistraße 91--93}
+  \city{Flensburg}
+  \country{Germany}
+  \postcode{24943}
+}
+\email{louis.richter@stud.hs-flensburg.de}
+
+\author{Tjorben Wade}
+\affiliation{%
+  \institution{Hochschule Flensburg}
+  \streetaddress{Kanzleistraße 91--93}
+  \city{Flensburg}
+  \country{Germany}
+  \postcode{24943}
+}
+\email{tjorben.wade@stud.hs-flensburg.de}
+
+\keywords{Open Data, Service Discovery, Smart City, Web of Things}
+
+\renewcommand{\shortauthors}{Damm and Landschoof, et al.}
+
+\begin{abstract}
+\input{sections/0-abstract}
+\end{abstract}
+
+\maketitle
+
+% \section{Einleitung}
+
+% Dies ist eine Einleitung.
+
+% \begin{itemize}
+%   \item List item
+%   \item Test
+% \end{itemize}
+
+% \begin{enumerate}
+%   \item test
+% \end{enumerate}
+
+% \enquote{Dies ist ein Zitat.} \autocites[vgl.][]{Apple.HIG}{Apple.HIG}.
+
+% \autocite[vgl.][]{GermanConventionBureau.2021.DKaSbViDvunCpB}
+
+% \textcquote[vgl.][]{Apple.HIG}{Individualisten, mit dem Ziel der persönlichen Einkommens- und Lebenslustmaximierung}
+
+% \subsection{Sub }
+
+% \subsubsection{Sub}
+
+\input{sections/1-introduction}
+\input{sections/2-related-works}
+\input{sections/3-state-of-the-art}
+\input{sections/4-problem-statement}
+\input{sections/5-POC-Application}
+\input{sections/6-discussion}
+\input{sections/7-conclusion}
+
+% \listoffigures
+% \listoftables
+\printglossaries{}
+\printbibliography[heading=bibintoc]
+
+% \appendix
+% \input{sections/A-ontology-definitions}
+
+\end{document}

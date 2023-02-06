@@ -1,0 +1,94 @@
+\subsection{Thing Description}\label{sec:thingdescription}
+
+\gls{td} is a \gls{w3c} standard to describe \gls{iot} devices and their properties. Developers can use them to describe devices in a clear and standardized way. The description can be used in applications or services to know how to interact with a device.
+A \gls{td} contains different properties and types. These include the type of device, available features or data, used protocols and the type of data a device is providing.
+An application using data from this device (e.g. the app discussed in this paper) should be able to read this standard and extract the needed information. \glspl{td} are written in \gls{json} and use the \gls{jsonld} standard to provide the information.
+
+A \gls{td} uses different vocabularies to define properties and types. The basic structure is defined by a core vocabulary. This contains a root object called \emph{Thing}. A \emph{Thing} object provides a \gls{uri},
+labels and metadata. In order to interact with a \emph{Thing}, it additionally provides \emph{Interaction Affordances}. There are three types of \emph{Interaction Affordances}:
+\begin{itemize}
+  \item \emph{Property Affordances}
+  \item \emph{Action Affordances}
+  \item \emph{Event Affordances}
+\end{itemize}
+
+A \emph{Property Affordance} describes where you can get information provided by the device. As in the example discussed in this paper, this could be the measured values of a sensor.
+An \emph{Action Affordance} describes how to interact with the device. It should define what the input and output data should look like.
+An \emph{Event Affordance} describes an interface where you will be notified of new information. It defines the data to subscribe or unsubscribe from an event.
+
+\begin{lstlisting}[language=json,caption={Example for a \gls{td}},label={lst:example-td}]
+{
+  "@context": [
+    "https://www.w3.org/2022/wot/td/v1.1",
+    {
+      "sdsc": "https://sdsc.fly.dev/ontology#",
+      "ssn": "http://www.w3.org/ns/ssn/",
+      "om": "http://www.ontology-of-units-.../om-2/",
+      "om18": "http://www.wurvoc.org/.../om-1.8/",
+      "geo": "http://www.w3.org/.../wgs84_pos#",
+      "saref": "https://saref.etsi.org/core/",
+      "s4envi": "https://saref.etsi.org/saref4envi/",
+      "time": "http://www.w3.org/2006/time#"
+    }
+  ],
+  "@type": "sdsc:TemperatureSensor",
+  "id": "https://hansen.de/temperature/1",
+  "title": "Measuring station Hansen",
+  "geo:lat": 54.789401,
+  "geo:long": 9.416152,
+  "s4envi:hasFrequencyMeasurement": {
+    "@type": "s4envi:FrequencyMeasurement",
+    "saref:isMeasuredIn": {
+      "@id": "om18:reciprocal_hour"
+    },
+    "saref:hasValue": 1
+  },
+  "s4envi:hasTransmissionPeriod": {
+    "@type": "s4envi:PeriodMeasurement",
+    "saref:isMeasuredIn": {
+      "@id": "time:unitSecond"
+    },
+    "saref:hasValue": 5
+  },
+  "saref:measuresProperty": {
+    "@id": "sdsc:Temperature"
+  },
+  "securityDefinitions": {
+    "opendata": {
+      "scheme": "nosec"
+    }
+  },
+  "security": ["opendata"],
+  "properties": {
+    "temperature": {
+      "@type": "sdsc:TemperatureAffordance",
+      "ssn:forProperty": {
+        "@id": "sdsc:Temperature"
+      },
+      "type": "number",
+      "unit": "om:degreeCelsius",
+      "readOnly": true,
+      "forms": [
+        {
+          "href": "https://.../temperature",
+          "op": "readproperty"
+        }
+      ]
+    }
+  }
+}
+\end{lstlisting}
+
+\autoref{lst:example-td} presents an example of a \gls{td} defined for a temperature sensor. The type of the sensor is defined by the \lstinline|@type| property. In this project, two sensor types were defined.
+
+The \lstinline|sdsc:TemperatureSensor| defines a temperature sensor, while \lstinline|sdsc:WindSpeedSensor| defines sensors for measuring wind speed.
+
+The \lstinline|id|-field must contain a unique identifier for the sensor. We are using the \gls{uri} of thing to identify the sensor. The \lstinline|title| can be defined by the owner of a sensor. It should contain a name that helps the user understand what the sensor does and where it is located.
+
+Additionally, we added two new fields to the \gls{td}['s] vocabulary to offer the opportunity to set location data. This means that fields \lstinline|geo:lat| and \lstinline|geo:long| must be included in the \gls{td} in order to provide latitude and longitude for a sensor.
+
+The \lstinline|s4envi:hasFrequencyMeasurement| field provides information about the time between measurements. It contains a unit in which the duration is measured and the value. A similar field is \lstinline|s4envi:hasTransmissionPeriod|. This field provides information about the duration of a transmission from the sensor to the server. It contains fields for the value and the unit. Both fields also do not appear in the standard vocabulary.
+
+The \gls{wot} standard specifies \lstinline|securityDefinitions| and its accompanying \lstinline|security| field to provide data about authentication when accessing a sensor. A public API for fetching data in a smart city was planned. For this reason, a security scheme for open data with no authentication at the server was defined.
+
+The \gls{td} shown in \autoref{lst:example-td} contains only one Interaction Affordance. It does not need Action Affordances, because the sensor does not provide an opportunity to change any settings, and Event Affordances, because the sensor does not send any events. The \lstinline|properties| field contains Property Affordances for temperature or wind speed. It specifies a unit (degrees in this case) and the form from which one can get the actual value for this property.

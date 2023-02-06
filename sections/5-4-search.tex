@@ -1,0 +1,39 @@
+\subsection{Search}\label{sec:search}
+
+As stated earlier, we used \emph{JSONPath} as the search option for our implementation to check whether \gls{wot} search is viable and advisable for use in open data contexts.
+
+With \emph{JSONPath}, we cannot filter the \gls{tdd} by the exact filter options we have, since we cannot filter by a radius. We can only filter all \glspl{td} within a bounding box of the circle that would be the result of the radius. The filtering by the actual radius has to be done in a second step on the client side.
+
+\autoref{lst:example-jsonpath-query} shows an exemplary \emph{JSONPath} query that would be used to search for all temperature sensors that are within the bounding box of the circle with a radius of 10 km around the specified center (54.8075525, 9.463745) and that have a minimum measurement frequency of 3 times per hour.
+
+The actual query does not contain line breaks or indentation, but they have been added here for readability reasons. Some additionally required frequency measurement unit filters have been omitted for brevity as well.
+
+\begin{lstlisting}[language=jsonpath,caption={Example JSONPath query},label={lst:example-jsonpath-query}]
+$[*]?(
+  @."geo:lat"<54.8973845209824
+  &&
+  @."geo:long"<9.6196146650183
+  &&
+  @."geo:lat">54.7177214790176
+  &&
+  @."geo:long">9.307875334981617
+  &&
+  @."@type"=="sdsc:TemperatureSensor"
+  &&
+  (
+    (
+      @."s4envi:hasFrequencyMeasurement"."saref:hasValue">=3.0
+      &&
+      @."s4envi:hasFrequencyMeasurement"."saref:isMeasuredIn"."@id"=="om18:reciprocal_hour"
+    )
+    ||
+    (
+      @."s4envi:hasFrequencyMeasurement"."saref:hasValue">=0.33333334
+      &&
+      @."s4envi:hasFrequencyMeasurement"."saref:isMeasuredIn"."@id"=="om18:hertz"
+    )
+    ||
+    ...
+  )
+)
+\end{lstlisting}

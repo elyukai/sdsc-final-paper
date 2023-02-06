@@ -1,0 +1,19 @@
+\section{Results}\label{sec:results}
+% Backend/Frontend
+In this study a reference implementation for working with sensors in a smart city was developed. It consists of a backend that is able to store and manage sensor information and a frontend in form of an android app to showcase the range of options of a \glsentrylong{tdd} and give a context to possible usage.
+
+% WoT
+The \gls{wot} is the only standardization in our area of work that enables interoperability. We found that it offers the required expressiveness and can be used for use cases similar to ours.
+As a result, the data collected by providers and the data requested by users can be connected to each other in a clearer way using the \gls{wot}. The hardware and software requirements of the \gls{wot} can be easily met due to the fact that the \gls{wot} mainly works with technologies that are already widespread (e.g. \gls{http}, \gls{json}, \dots). The only downside we found is that the \gls{wot} does not include \glsxtrshort{qos} aspects. We solved this problem by creating an ontology with obligatory usage that does include them.
+
+% Ontology
+The ontology aligns with the \citetitle{w3c.wot.tdo.20230111} for specific use in \glspl{td}. It is well suited for our use case and can easily be altered to fit similar works to ours. Due to the uniform class hierarchy for each sensor type it is a straightforward process to extend the ontology to include more or different sensors. Additionally, we based our own ontology on well-established ones. These ontologies have been used in various different ontologies and projects, making it easier to compare our ontology to others and adjust existing ontologies based on our work.
+
+%JSON-LD
+One of the cruxes in our work was the \gls{jsonld} expansion and the handling of expanded data. In most cases, it is best to do this on the server side. There are however use cases where this is not sensible. Especially if the client gets data from multiple servers, it might be necessary to do the expansion on the client side to ensure that the data is parsed consistently. This would however also lead to a complex way of expanding the data. Regardless of where the expansion takes place, it can quickly become complex and there are not enough libraries for it to be easily usable on all typical platforms.
+
+% Search
+\emph{JSONPath} and thus syntactic searches are suitable for service discovery, but require that the \glspl{td} are normalized on the server side and that the type of normalization is known to consumers of that \gls{tdd}. For consistency, the normalization should be done using expansion. Difficulties can arise when a property used for filtering can be specified in different units, since all possible units have to be provided a filter for. This complicates the filtering process and makes it more prone to errors. In addition, since multiple servers may use different normalization strategies, queries would not be universally usable. Semantic search, in contrast, is harder to implement, but easier to use, since it does not require normalization, which aligns more with the idea of \gls{jsonld} that has been outlined before. In both cases, client-side normalization is strongly recommended, if not required.
+
+% Integration in bestehende Systeme
+\glsentrylongpl{td} for \glsentrylong{sd} itself is an important step and more work needs to be done be able to use it. Through the usage of ontologies, all data about the sensors is provided in a uniform format. However, when requesting data from a specific sensor the format still depends on the sensor itself.

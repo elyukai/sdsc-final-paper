@@ -1,0 +1,30 @@
+\section{Introduction}\label{sec:introduction}
+
+The deployment of \gls{iot} devices and sensors in cities has increased significantly in recent years, and these systems play a crucial role in collecting data that provides various information about the environment.
+For example, sensors can measure the current temperature in the city center, or help a driver locate unused parking spots in the city center.
+In this paper, we investigate the development of a \gls{wot} solution for the standardization of \gls{iot} systems interfaces used by cities.
+
+The problem is that the interfaces of these sensors are not consistent, making it difficult for developers to access the data.
+A European directive \autocite{digital-strategy.ec.europa.eu} requires member states, among other things, to make the data collected by sensors available to the public, but they have the freedom to decide how to do so.
+This means that each city can use its own standards, which complicates interoperability. This makes it difficult for developers to create applications that can use data from multiple sources.
+Therefore, it is necessary to find a solution that allows data from different sources to be combined and a standard format to be set.
+
+The authors of this paper previously conducted a study titled \citetitle{Survey.Service.Discovery.in.Smart.Cities} \autocite{Survey.Service.Discovery.in.Smart.Cities} in which various solutions were examined.
+In this study, the \gls{wot} technology emerged as the best solution. It is used to extend the functionality of \gls{iot} and optimize \gls{sd}.
+
+The goal of this study was to develop an extended \gls{wot} solution that allows cities to combine and make data from different \gls{iot} systems accessible.
+Furthermore, it will be demonstrated using a test environment that the solution can be successfully implemented and utilized.
+
+As part of this paper, a backend system was developed to store and manage sensor information.
+The backend system uses a format that is based on \gls{wot} and has been extended by us.
+It allows for the integration and processing of data from various sensors and devices.
+Additionally, a mobile application was created as a frontend system that works with sensor data to test the backend.
+This application demonstrates how developers can use data from the backend to create applications that work with sensor data.
+In our example, the application can be used to display temperatures at different locations.
+
+We have shown that it is possible to develop a backend that uses this new standard and that it is possible to create applications that can work with this data.
+We believe that the development of an extended \gls{wot} solution for the standardization of \gls{iot} systems interfaces will greatly benefit cities and developers by providing a unified and easily accessible data source.
+
+Initially, important fundamentals will be explained, in order to subsequently delve into the relevant problem.
+Later on, the solution will be presented and the structure of the corresponding test environment will be explained.
+Afterwards, we will discuss the work and draw a conclusion.

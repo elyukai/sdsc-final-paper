@@ -1,0 +1,13 @@
+\subsubsection{API}\label{sec:apibackend}
+
+The \gls{api} is a trimmed down implementation of the \gls{wot} Directory Service \gls{api} and is responsible for retrieving, listing and searching \glspl{td}, while also offering an Events \gls{api} to notify clients about the changes to \glspl{td}. The ontology described earlier in this paper is provided over a separate endpoint.
+
+The following list shows all openly accessible endpoints to the clients:
+
+\begin{itemize}
+    \item \lstinline|/ontology| shows our defined ontology.
+    \item \lstinline|/api/things| returns a paginated list of \glspl{td}.
+    \item \lstinline|/api/things/{id}| returns a single \gls{td}, where the \lstinline|id| parameter is the \gls{uri} of the \gls{td}.
+    \item \lstinline|/api/search/jsonpath?query={query}| searches \glspl{td} with an \emph{JSONPath} expression as the query parameter.
+    \item \lstinline|/events/{type}| informs about changes to \glspl{td} via \gls{SSE} where the type specifies the event.
+\end{itemize}

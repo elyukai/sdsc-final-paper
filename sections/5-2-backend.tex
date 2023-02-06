@@ -1,0 +1,10 @@
+\subsection{Backend}\label{sec:backend}
+
+The \gls{wot} only provides the specification for a \gls{tdd} service \autocite[section 7.3]{w3c.wot.discovery.20210602}, but there are no full implementations of the standard yet. Therefore, we implemented the relevant parts of the Thing Description Directory specification.
+
+A centralized service is necessary for identifying and accessing the \glspl{td} provided by multiple sources. The \gls{td} will be obtained through a single \gls{url} that leads to a provider service, which returns the \gls{td} metadata. The service caches the \gls{td} metadata in a database for efficient retrieval and provides an \gls{api} for accessing it. Additionally, the service keeps track of the respective providers for each \gls{td} and allows them to register and manage their own \glspl{td}, as well as store additional information about the providers themselves. Furthermore, the implementation of the service follows the \gls{tdd} guidelines specified by the \gls{wot}.
+
+A \gls{sd} process starts with a request being sent to a thing provider, which returns the \gls{td} metadata. This is stored in a database along with other associated data such as the provider itself. A client can then retrieve one or more \glspl{td} via the \gls{api}.
+
+\input{sections/5-2-1-Api}
+\input{sections/5-2-2-Admin-panel}

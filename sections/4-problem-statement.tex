@@ -1,0 +1,9 @@
+\section{Problem Statement}\label{sec:problem-statement}
+
+The data published by cities does not have a uniform format, with both structured formats such as \gls{json} and unstructured formats such as plain text being used, which makes automated processing of the data more difficult \autocite{govdata}. Currently, there is no comprehensive solution to this problem, as existing systems only provide partial solutions or are not specific enough for the Smart City sensor application domain.
+
+Determining whether the \gls{wot} and its associated \glspl{td} are a good solution is part of our problem, as so far it appears to be the best approach, providing structure and semantic expressiveness for this use case. However, the \gls{wot} does not make assumptions about the content of descriptions and ontologies used for Smart City applications are neither standardized nor provide a common vocabulary that covers a wide range of Smart City sensor application domains. Additionally, the \gls{wot} does not include \gls{qos} aspects, which can be important for \gls{sd}, enhancing the quality and preciseness of search.
+
+In order to enable search, the \gls{wot} provides different search type options that may be implemented \autocite[section 7.3.2.3]{w3c.wot.discovery.20210602}. It is to be validated that at least of these search options is suitable for \gls{sd} of public sensors.
+
+A challenge is to extend the \gls{wot} to solve all the mentioned problems. Additionally, it must also be tested in practice to check for its functionality. In \autoref{sec:pocapplication}, the implementation of a proof of concept is examined, and it is shown how this solution can be used in a test environment.
